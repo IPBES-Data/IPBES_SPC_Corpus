@@ -45,6 +45,7 @@
 "Set 3.3":
  - '(ecology OR ecological OR biodiversity OR habitat OR ecosystem) AND'
  - '(restoration OR rewilding) AND'
+ - 'planning AND'
  - '(indicator OR index OR metric OR objective)'
 
 "Set 4":
