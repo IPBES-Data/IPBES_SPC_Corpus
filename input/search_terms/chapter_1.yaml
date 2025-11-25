@@ -6,7 +6,7 @@
   - '((indigenous AND (knowledge OR perspectives OR governance OR rights OR values OR practices OR land)) OR "local knowledge" OR biocultural OR customary OR (diverse AND ("knowledge systems" OR "world views" OR worldviews))) AND'
   - '(planning OR governance OR policy OR tenure OR rights) AND'
   - '(just OR inclusive OR fair OR effective OR equity OR equitable) AND'
-  - '(area OR territory OR "land use" OR "sea use" OR marine OR coastal OR "land-sea")
+  - '(area OR territory OR "land use" OR "sea use" OR marine OR coastal OR "land-sea")'
 
 "Set 2.1":
   - '("multi-level" OR integrated OR accountable OR customary OR diverse OR "context-dependent" OR "cross-scale" OR polycentric OR pluralism OR adaptive) AND'
