@@ -3,16 +3,23 @@
 # v1
 
 "Set 1":
-  - '((indigenous AND (knowledge OR perspectives OR governance OR rights OR values OR practices OR land OR territory)) OR "local knowledge" OR biocultural OR customary OR (diverse AND ("knowledge systems" OR "world views" OR worldviews))) AND'
+  - '((indigenous AND (knowledge OR perspectives OR governance OR rights OR values OR practices OR land)) OR "local knowledge" OR biocultural OR customary OR (diverse AND ("knowledge systems" OR "world views" OR worldviews))) AND'
   - '(planning OR governance OR policy OR tenure OR rights) AND'
-  - '(just OR inclusive OR fair OR effective OR equity OR equitable)'
+  - '(just OR inclusive OR fair OR effective OR equity OR equitable) AND'
+  - '(area OR territory OR "land use" OR "sea use" OR marine OR coastal OR "land-sea")
 
-"Set 2":
+"Set 2.1":
   - '("multi-level" OR integrated OR accountable OR customary OR diverse OR "context-dependent" OR "cross-scale" OR polycentric OR pluralism OR adaptive) AND'
   - '(governance OR policy OR framework) AND'
-  - '("spatial planning" OR "marine planning" OR management OR "land-use" OR "sea-use")'
+  - '("spatial planning" OR "marine planning" OR "land-use planning" OR "sea-use planning" OR "coastal planning" OR "territorial planning")'
+
+"Set 2.2":
+ - '("legal pluralism" OR "institutional diversity" OR "polycentric governance" OR "multi-level governance" OR "customary governance" OR "co-management" OR "adaptive governance" OR "integrated governance" OR "cross-scale governance") AND'
+ - '(institution OR authority OR legitimacy) AND'
+ - '("spatial planning" OR "marine planning" OR "land-use planning" OR "sea-use planning" OR "coastal planning" OR "territorial planning")'
 
 "Set 3":
   - '(participatory OR community OR "co-design" OR stakeholder OR plurality OR tailored OR "different contexts" OR transformative OR adaptive OR "place-based" OR integrated OR multifunctional OR diverse) AND'
   - '(approach OR strategy OR practice OR plan OR policy OR framework OR instrument) AND'
+  - '("spatial planning" OR "marine planning" OR "land-use planning" OR "sea-use planning" OR "coastal planning" OR "territorial planning") AND'
   - '(landscape OR seascape OR watershed OR ecosystem OR area OR region OR "land-sea" OR connectivity OR marine OR ocean OR maritime)'
