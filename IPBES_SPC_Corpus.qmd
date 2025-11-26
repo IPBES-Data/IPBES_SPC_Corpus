@@ -87,6 +87,8 @@ params:
         goldstandard = read.csv(file.path("input", "keypaper", "GoldStandardPapers.csv"), sep = ",")
       )
 
+    n_samples: 250
+
     output_dir: !expr file.path(".", "spc_corpus", "output")
 
     keyworks: !expr file.path(".", "spc_corpus", "output", "key_works")
@@ -97,6 +99,19 @@ params:
     chapter_4: !expr file.path(".", "spc_corpus", "output", "chapter_4")
     chapter_5: !expr file.path(".", "spc_corpus", "output", "chapter_5")
     chapter_6: !expr file.path(".", "spc_corpus", "output", "chapter_6")
+
+    # zotero_groups: !expr >-
+    #   c(
+    #     list(
+    #       chapter_3 = c(
+    #         "Set 1" = 6325232L,
+    #         "Set 3" = 6325271L,
+    #         "Set 3.1A" = 6325274L
+    #       )
+    #     )
+    #   )
+
+    csljson_batch_size: 5000
 
     # pages_dir: !expr file.path(".", "spc_corpus", "output", "pages")
 
@@ -113,6 +128,10 @@ params:
 # paste(
 #     "(", paste0(readLines(file.path("tca_corpus", "input", "search terms", "nature.txt")), collapse = "\n"), ") \nAND \n(", paste0(readLines(file.path("tca_corpus", "input", "search terms", "tfc.txt")), collapse = "\n"), ")"
 # )
+
+try(
+  Sys.setenv(openalexR.apikey = keyring::key_get("API_openalex"))
+)
 
 knitr::opts_chunk$set(message = NA)
 
@@ -945,6 +964,174 @@ if (!file.exists(fn)) {
 }
 ```
 
+Due to length limitations of the API call, the initial download is done without the types filter (`parquet` folder) and afterwards filtered using the types filter (`corpus` directory).
+
+```{r}
+#| label: download_chapter_3
+
+corpus_dir <- file.path(params$chapter_3, "corpus.openalex_pro", "corpus")
+if (!dir.exists(corpus_dir)) {
+  fetch_corpus(
+    project_dir = file.path(params$chapter_3, "corpus.openalex_pro"),
+    search_terms = params$search_terms$chapter_3,
+    st_spcc = st$spcc,
+    publication_date = params$publication_date,
+    types_filter = params$types_filter,
+    workers = 8
+  )
+}
+```
+
+
+```{r}
+#| label: export_random_n_chapter3
+#| eval: false
+#|
+
+# fn <- file.path(
+#   params$chapter_3,
+#   "corpus.openalex_pro",
+#   paste0("random_", n, ".xlsx")
+# )
+# if (!file.exists(fn)) {
+#   sets <- list.dirs(
+#     file.path(
+#       params$chapter_3,
+#       "corpus.openalex_pro",
+#       "corpus"
+#     ),
+#     full.names = TRUE
+#   )
+
+#   names(sets) <- sets |>
+#     basename() |>
+#     utils::URLdecode() |>
+#     gsub(
+#       pattern = "page=",
+#       replacement = ""
+#     )
+
+#   samples <- lapply(
+#     sets,
+#     openalexPro::sample_parquet_n,
+#     n = params$n_samples,
+#     select = c("id", "doi", "citation", "title", "abstract")
+#   )
+
+#   lapply(
+#     seq_along(samples),
+#     function(i) {
+#       samples[[i]] |>
+#         dplyr::mutate(
+#           abstract = substr(abstract, 1, 5000)
+#         ) |>
+#         writexl::write_xlsx(
+#           path = file.path(
+#             params$chapter_3,
+#             "corpus.openalex_pro",
+#             paste0(
+#               names(samples)[[i]],
+#               "_",
+#               n,
+#               ".xlsx"
+#             )
+#           )
+#         )
+#     }
+#   )
+# }
+```
+
+```{r}
+#| label: export_to_csljson
+
+fn <- file.path(
+  params$chapter_3,
+  "corpus.openalex_pro",
+  "csl_json"
+)
+
+if (!file.exists(fn)) {
+  sets <- list.files(
+    file.path(
+      params$chapter_3,
+      "corpus.openalex_pro",
+      "corpus"
+    ),
+    full.names = TRUE,
+    recursive = FALSE
+  )
+
+  names(sets) <- sets |>
+    basename() |>
+    utils::URLdecode() |>
+    gsub(
+      pattern = "page=",
+      replacement = ""
+    )
+
+  samples <- lapply(
+    seq_along(sets),
+    function(part) {
+      message("Converting ", names(sets)[[part]], " ...")
+      openalexConvert::corpus_to_csljson(
+        corpus = sets[[part]],
+        output = sets[[part]] |>
+          dirname() |>
+          dirname() |>
+          file.path(
+            "csl_json",
+            names(sets)[[part]]
+          ),
+        chunk_size = params$csljson_batch_size,
+        verbose = TRUE
+      )
+    }
+  )
+}
+```
+
+```{r}
+#| label: export_to_zenodo
+#| eval: FALSE
+
+# TODO:
+#   create groups
+#   get API key
+#
+
+fn <- file.path(
+  params$chapter_3,
+  "corpus.openalex_pro",
+  "csl_json.exported"
+)
+if (!file.exists(fn)) {
+  sets <- list.files(
+    file.path(
+      params$chapter_3,
+      "corpus.openalex_pro",
+      "csljson"
+    ),
+    full.names = TRUE,
+    recursive = FALSE
+  )
+
+  names(sets) <- basename(sets)
+
+  lapply(
+    seq_along(sets),
+    function(part) {
+      openalexConvert::csljson_to_zotero_upload(
+        sets[[part]],
+        group_id = params$zotero_groups$chapter_3[[names(sets)[[part]]]],
+        api_key = keyring::key_get("API_zotero_IPBES_spc_corpus"),
+        pause = 0.1
+      )
+    }
+  )
+}
+```
+
 ## Chapter 4
 
 ```{r}
@@ -971,65 +1158,6 @@ if (!file.exists(fn)) {
 
 fn <- file.path(params$chapter_5, "st_hits.rds")
 if (!file.exists(fn)) {
-  # queries <- lapply(
-  #   params$search_terms$chapter_5,
-  #   function(section) {
-  #     lapply(
-  #       section,
-  #       function(s) {
-  #         openalexPro::pro_query(
-  #           title_and_abstract.search = paste0(
-  #             "(",
-  #             st$spcc,
-  #             ") AND (",
-  #             st_compact(s),
-  #             ")"
-  #           ),
-  #           type = params$types_filter,
-  #           from_publication_date = params$publication_date$from,
-  #           to_publication_date = params$publication_date$to
-  #         )
-  #       }
-  #     )
-  #   }
-  # )
-
-  # result <- lapply(
-  #   names(queries),
-  #   function(sect_nm) {
-  #     result <- lapply(
-  #       names(queries[[sect_nm]]),
-  #       function(nm) {
-  #         message("Retrieving ", sect_nm, " - ", nm, " ...")
-  #         result <- c(
-  #           count = NA_integer_,
-  #           db_response_time_ms = NA_integer_,
-  #           page = NA_integer_,
-  #           per_page = NA_integer_
-  #         )
-  #         try(
-  #           result <- queries[[sect_nm]][nm] |>
-  #             openalexR::oa_request(
-  #               count_only = TRUE,
-  #               verbose = TRUE
-  #             ) |>
-  #             unlist(),
-  #           silent = FALSE
-  #         )
-  #         return(result)
-  #       }
-  #     ) |>
-  #       do.call(what = cbind) |>
-  #       t() |>
-  #       as.data.frame() |>
-  #       dplyr::select(count)
-  #     browser()
-  #     rownames(result) <- names(queries[[sect_nm]])
-  #     return(result)
-  #   }
-  # )
-  # names(result) <- names(queries)
-
   get_count_L2(
     sets = params$search_terms$chapter_5,
     types_filter = params$types_filter,
@@ -1325,7 +1453,8 @@ render_mermaid(
   file.path("figures", "chapter1.mmd"),
   c(
     C1_1 = format_count(ch1_counts[["Set 1"]]),
-    C1_2 = format_count(ch1_counts[["Set 2"]]),
+    C1_2.1 = format_count(ch1_counts[["Set 2.1"]]),
+    C1_2.2 = format_count(ch1_counts[["Set 2.2"]]),
     C1_3 = format_count(ch1_counts[["Set 3"]])
     # C1_4 = format_count(ch1_counts[["Set 4"]]),
     # C1_5 = format_count(ch1_counts[["Set 5"]]),
