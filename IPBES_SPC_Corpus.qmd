@@ -874,65 +874,6 @@ if (!file.exists(fn)) {
 
 fn <- file.path(params$chapter_2, "st_hits.rds")
 if (!file.exists(fn)) {
-  # queries <- lapply(
-  #   params$search_terms$chapter_2,
-  #   function(section) {
-  #     lapply(
-  #       section,
-  #       function(s) {
-  #         openalexPro::pro_query(
-  #           title_and_abstract.search = paste0(
-  #             "(",
-  #             st$spcc,
-  #             ") AND (",
-  #             st_compact(s),
-  #             ")"
-  #           ),
-  #           type = params$types_filter,
-  #           from_publication_date = params$publication_date$from,
-  #           to_publication_date = params$publication_date$to
-  #         )
-  #       }
-  #     )
-  #   }
-  # )
-
-  # result <- lapply(
-  #   names(queries),
-  #   function(sect_nm) {
-  #     result <- lapply(
-  #       names(queries[[sect_nm]]),
-  #       function(nm) {
-  #         message("Retrieving ", sect_nm, " - ", nm, " ...")
-  #         result <- c(
-  #           count = NA_integer_,
-  #           db_response_time_ms = NA_integer_,
-  #           page = NA_integer_,
-  #           per_page = NA_integer_
-  #         )
-  #         try(
-  #           result <- queries[[sect_nm]][nm] |>
-  #             openalexR::oa_request(
-  #               count_only = TRUE,
-  #               verbose = TRUE
-  #             ) |>
-  #             unlist(),
-  #           silent = FALSE
-  #         )
-  #         return(result)
-  #       }
-  #     ) |>
-  #       do.call(what = cbind) |>
-  #       t() |>
-  #       as.data.frame() |>
-  #       dplyr::select(count)
-  #     browser()
-  #     rownames(result) <- names(queries[[sect_nm]])
-  #     return(result)
-  #   }
-  # )
-  # names(result) <- names(queries)
-
   get_count_L2(
     sets = params$search_terms$chapter_2,
     types_filter = params$types_filter,
@@ -982,68 +923,9 @@ if (!dir.exists(corpus_dir)) {
 }
 ```
 
-
-```{r}
-#| label: export_random_n_chapter3
-#| eval: false
-#|
-
-# fn <- file.path(
-#   params$chapter_3,
-#   "corpus.openalex_pro",
-#   paste0("random_", n, ".xlsx")
-# )
-# if (!file.exists(fn)) {
-#   sets <- list.dirs(
-#     file.path(
-#       params$chapter_3,
-#       "corpus.openalex_pro",
-#       "corpus"
-#     ),
-#     full.names = TRUE
-#   )
-
-#   names(sets) <- sets |>
-#     basename() |>
-#     utils::URLdecode() |>
-#     gsub(
-#       pattern = "page=",
-#       replacement = ""
-#     )
-
-#   samples <- lapply(
-#     sets,
-#     openalexPro::sample_parquet_n,
-#     n = params$n_samples,
-#     select = c("id", "doi", "citation", "title", "abstract")
-#   )
-
-#   lapply(
-#     seq_along(samples),
-#     function(i) {
-#       samples[[i]] |>
-#         dplyr::mutate(
-#           abstract = substr(abstract, 1, 5000)
-#         ) |>
-#         writexl::write_xlsx(
-#           path = file.path(
-#             params$chapter_3,
-#             "corpus.openalex_pro",
-#             paste0(
-#               names(samples)[[i]],
-#               "_",
-#               n,
-#               ".xlsx"
-#             )
-#           )
-#         )
-#     }
-#   )
-# }
-```
-
 ```{r}
 #| label: export_to_csljson
+#| eval: false
 
 fn <- file.path(
   params$chapter_3,
@@ -1092,45 +974,45 @@ if (!file.exists(fn)) {
 ```
 
 ```{r}
-#| label: export_to_zenodo
-#| eval: FALSE
-
-# TODO:
-#   create groups
-#   get API key
-#
+#| label: export csv_excel
 
 fn <- file.path(
   params$chapter_3,
   "corpus.openalex_pro",
-  "csl_json.exported"
+  "log_export_sets.csv"
 )
+
 if (!file.exists(fn)) {
-  sets <- list.files(
-    file.path(
-      params$chapter_3,
-      "corpus.openalex_pro",
-      "csljson"
-    ),
-    full.names = TRUE,
-    recursive = FALSE
-  )
-
-  names(sets) <- basename(sets)
-
-  lapply(
-    seq_along(sets),
-    function(part) {
-      openalexConvert::csljson_to_zotero_upload(
-        sets[[part]],
-        group_id = params$zotero_groups$chapter_3[[names(sets)[[part]]]],
-        api_key = keyring::key_get("API_zotero_IPBES_spc_corpus"),
-        pause = 0.1
-      )
-    }
+  export_sets(
+    project_dir = file.path(params$chapter_3, "corpus.openalex_pro"),
+    select = c(
+      "id",
+      "doi",
+      "title",
+      "publication_year",
+      "citation",
+      "abstract",
+      "is_retracted",
+      "language",
+      "type",
+      "cited_by_count",
+      ##
+      "primary_topic$id",
+      # "primary_topic$display_name",
+      "primary_topic$score",
+      "primary_topic$subfield$id",
+      "primary_topic$subfield$display_name",
+      "primary_topic$field$id",
+      "primary_topic$field$display_name",
+      "primary_topic$domain$id",
+      "primary_topic$domain$display_name"
+      ## Only Chapter 2,
+      # "sustainable_development_goals",
+    )
   )
 }
 ```
+
 
 ## Chapter 4
 
