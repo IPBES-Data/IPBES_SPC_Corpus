@@ -19,7 +19,7 @@
  - '("spatial planning" OR "marine planning" OR "land-use planning" OR "sea-use planning" OR "coastal planning" OR "territorial planning")'
 
 "Set 3":
-  - '(participatory OR community OR "co-design" OR stakeholder OR plurality OR tailored OR "different contexts" OR transformative OR adaptive OR "place-based" OR integrated OR multifunctional OR diverse) AND'
-  - '(approach OR strategy OR practice OR plan OR policy OR framework OR instrument) AND'
-  - '("spatial planning" OR "marine planning" OR "land-use planning" OR "sea-use planning" OR "coastal planning" OR "territorial planning") AND'
+  - '(participatory OR stakeholder OR transformative OR adaptive OR integrated) AND'
+  - '(approach OR strategy OR practice OR policy OR framework) AND'
+  - '((spatial OR marine OR "land-use" OR "sea-use" OR coastal OR territorial) AND planning) AND'
   - '(landscape OR seascape OR watershed OR ecosystem OR area OR region OR "land-sea" OR connectivity OR marine OR ocean OR maritime)'
