@@ -212,6 +212,9 @@ dir.create(params$chapter_3, recursive = TRUE, showWarnings = FALSE)
 dir.create(params$chapter_4, recursive = TRUE, showWarnings = FALSE)
 dir.create(params$chapter_5, recursive = TRUE, showWarnings = FALSE)
 dir.create(params$chapter_6, recursive = TRUE, showWarnings = FALSE)
+
+
+# progressr::handlers(global = TRUE)
 ```
 
 <p align="center">
@@ -858,12 +861,121 @@ fn <- file.path(params$chapter_1, "st_hits.rds")
 if (!file.exists(fn)) {
   get_count_L1(
     sets = params$search_terms$chapter_1,
-    types_filter = params$types_filter,
+    types_filter = NULL, #params$types_filter,
     publication_year_from = params$publication_date$from,
     publication_year_to = params$publication_date$to,
     st_AND = st$spcc
   ) |>
     saveRDS(file = fn)
+}
+```
+
+
+Due to length limitations of the API call, the initial download is done without the `types` and `to_publication_date` filter (`parquet` folder) and afterwards filtered using the types filter (`corpus` directory).
+
+```{r}
+#| label: download_chapter_1
+
+corpus_dir <- file.path(params$chapter_1, "corpus.openalex_pro", "corpus")
+if (!dir.exists(corpus_dir)) {
+  fetch_corpus(
+    project_dir = file.path(params$chapter_1, "corpus.openalex_pro"),
+    search_terms = params$search_terms$chapter_1,
+    st_spcc = st$spcc,
+    publication_date = params$publication_date,
+    types_filter = params$types_filter,
+    workers = 8
+  )
+}
+```
+
+
+```{r}
+#| label: export_to_csljson_chapter_1
+
+fn <- file.path(
+  params$chapter_1,
+  "corpus.openalex_pro",
+  "csl_json"
+)
+
+if (!file.exists(fn)) {
+  sets <- list.files(
+    file.path(
+      params$chapter_1,
+      "corpus.openalex_pro",
+      "corpus"
+    ),
+    full.names = TRUE,
+    recursive = FALSE
+  )
+
+  names(sets) <- sets |>
+    basename() |>
+    utils::URLdecode() |>
+    gsub(
+      pattern = "page=",
+      replacement = ""
+    )
+
+  samples <- lapply(
+    seq_along(sets),
+    function(part) {
+      message("Converting ", names(sets)[[part]], " ...")
+      openalexConvert::corpus_to_csljson(
+        corpus = sets[[part]],
+        output = sets[[part]] |>
+          dirname() |>
+          dirname() |>
+          file.path(
+            "csl_json",
+            names(sets)[[part]]
+          ),
+        chunk_size = params$csljson_batch_size,
+        verbose = TRUE
+      )
+    }
+  )
+}
+```
+
+```{r}
+#| label: export csv_excel_chapter_1
+
+fn <- file.path(
+  params$chapter_1,
+  "corpus.openalex_pro",
+  "log_export_sets.csv"
+)
+
+if (!file.exists(fn)) {
+  export_sets(
+    project_dir = file.path(params$chapter_1, "corpus.openalex_pro"),
+    select = c(
+      "id",
+      "doi",
+      "title",
+      "publication_year",
+      "citation",
+      "abstract",
+      "is_retracted",
+      "language",
+      "type",
+      "cited_by_count",
+      ##
+      "primary_topic$id",
+      # "primary_topic$display_name",
+      "primary_topic$score",
+      "primary_topic$subfield$id",
+      "primary_topic$subfield$display_name",
+      "primary_topic$field$id",
+      "primary_topic$field$display_name",
+      "primary_topic$domain$id",
+      "primary_topic$domain$display_name"
+      ## Only Chapter 2,
+      # "sustainable_development_goals",
+    )
+  )
 }
 ```
 
@@ -905,7 +1017,7 @@ if (!file.exists(fn)) {
 }
 ```
 
-Due to length limitations of the API call, the initial download is done without the types filter (`parquet` folder) and afterwards filtered using the types filter (`corpus` directory).
+Due to length limitations of the API call, the initial download is done without the `types` and `to_publication_date` (`parquet` folder) and afterwards filtered using the types filter (`corpus` directory).
 
 ```{r}
 #| label: download_chapter_3

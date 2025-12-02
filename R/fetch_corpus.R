@@ -18,12 +18,13 @@ fetch_corpus <- function(
           ")"
         ),
         # type = params$types_filter,
-        from_publication_date = publication_date$from,
-        to_publication_date = publication_date$to
+        from_publication_date = publication_date$from #,
+        # to_publication_date = publication_date$to
       )
     }
   )
 
+  message("####################")
   message("Downloading raw corporas...")
 
   openalexPro::pro_fetch(
@@ -36,13 +37,15 @@ fetch_corpus <- function(
     workers = workers,
   )
 
+  message("####################")
   message("Harmonizing raw corporas ...")
 
   openalexPro::harmonize_parquet_schemata(
     root_dir = file.path(project_dir, "parquet")
   )
 
-  message("Filtering raw corporas by types ...")
+  message("####################")
+  message("Filtering raw corporas by types and end data...")
 
   files <- list.files(
     path = file.path(project_dir, "parquet"),
@@ -51,35 +54,86 @@ fetch_corpus <- function(
     full.names = TRUE
   )
 
-  for (f in files) {
-    # build destination path mirroring hive subdirs
+  # for (f in files) {
+  #   # build destination path mirroring hive subdirs
 
-    f_out <- gsub(
-      pattern = "/parquet/",
-      replacement = "/corpus/",
-      x = f
+  #   f_out <- gsub(
+  #     pattern = "/parquet/",
+  #     replacement = "/corpus/",
+  #     x = f
+  #   )
+
+  #   dir.create(
+  #     dirname(f_out),
+  #     showWarnings = FALSE,
+  #     recursive = TRUE
+  #   )
+
+  #   # read lazily
+  #   pdt <- publication_date$to
+  #   arrow::open_dataset(
+  #     f,
+  #     format = "parquet"
+  #   ) |>
+  #     dplyr::filter(
+  #       type %in% types_filter,
+  #       publication_date <= pdt
+  #     ) |>
+  #     arrow::write_dataset(
+  #       path = dirname(f_out),
+  #       format = "parquet",
+  #       basename_template = paste0(basename(f_out), "-{i}.parquet")
+  #     )
+  # }
+
+  # parallel filtering of raw corpora
+  pdt <- publication_date$to
+
+  old_plan <- future::plan(future::multisession, workers = workers)
+  on.exit(
+    future::plan(old_plan),
+    add = TRUE
+  )
+
+  progressr::with_progress({
+    p <- progressr::progressor(along = files)
+
+    future.apply::future_lapply(
+      files,
+      function(f) {
+        p(sprintf("Processing %s", basename(f)))
+
+        # build destination path mirroring hive subdirs
+        f_out <- gsub(
+          pattern = "/parquet/",
+          replacement = "/corpus/",
+          x = f
+        )
+
+        dir.create(
+          dirname(f_out),
+          showWarnings = FALSE,
+          recursive = TRUE
+        )
+
+        arrow::open_dataset(
+          f,
+          format = "parquet"
+        ) |>
+          dplyr::filter(
+            type %in% types_filter,
+            publication_date <= .env$pdt
+          ) |>
+          arrow::write_dataset(
+            path = dirname(f_out),
+            format = "parquet",
+            basename_template = paste0(basename(f_out), "-{i}.parquet")
+          )
+
+        NULL
+      }
     )
-
-    dir.create(
-      dirname(f_out),
-      showWarnings = FALSE,
-      recursive = TRUE
-    )
-
-    # read lazily
-    arrow::open_dataset(
-      f,
-      format = "parquet"
-    ) |>
-      dplyr::filter(
-        type %in% types_filter
-      ) |>
-      arrow::write_dataset(
-        path = dirname(f_out),
-        format = "parquet",
-        basename_template = paste0(basename(f_out), "-{i}.parquet")
-      )
-  }
+  })
 
   return(file.path(project_dir, "corpus"))
 }
