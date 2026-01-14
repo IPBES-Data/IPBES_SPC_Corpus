@@ -3,120 +3,116 @@ flowchart LR
     Start([SPC Corpus]) --> Ch2L2["<u><span style='color:#1a0dab;'>chapter_2.yaml<br/>Level 2 GBF bundles</span></u>"]
     click Ch2L2 "../search_terms/chapter_2.yaml" "Open chapter_2.yaml"
 
-    subgraph L1_GBF["GBF contexts & targets"]
+    subgraph Chapter2Sets["GBF contexts & targets"]
         direction TB
-        GBF_Urban["GBF-1 Urban<br/>(n = <<GBF_Urban>>)"]
-        GBF_Rural["GBF-1 Rural<br/>(n = <<GBF_Rural>>)"]
-        GBF_Fresh["GBF-1 Freshwater<br/>(n = <<GBF_Fresh>>)"]
-        GBF_Marine["GBF-1 Marine<br/>(n = <<GBF_Marine>>)"]
-        GBF_Restore["GBF-2 Ecosystem restoration<br/>(n = <<GBF_Restore>>)"]
+        Set_1["GSet 1n<br/>(n = <<Set_1>>)"]
+        Set_2["Set 2<br/>(n = <<Set_2>>)"]
+        Set_3["Set 3<br/>(n = <<Set_3>>)"]
     end
-    Ch2L2 --> GBF_Urban
-    Ch2L2 --> GBF_Rural
-    Ch2L2 --> GBF_Fresh
-    Ch2L2 --> GBF_Marine
-    Ch2L2 --> GBF_Restore
+    Ch2L2 --> Set_1
+    Ch2L2 --> Set_2
+    Ch2L2 --> Set_3
 
-    subgraph L1_TARGET["GBF contexts & targets"]
-        T3["Target 3<br/>(n = <<T3>>)"]
-        T4["Target 4<br/>(n = <<T4>>)"]
-        T5["Target 5<br/>(n = <<T5>>)"]
-        T6["Target 6<br/>(n = <<T6>>)"]
-        T7["Target 7<br/>(n = <<T7>>)"]
-        T8["Target 8<br/>(n = <<T8>>)"]
-        T9["Target 9<br/>(n = <<T9>>)"]
-        T10["Target 10<br/>(n = <<T10>>)"]
-        T11["Target 11<br/>(n = <<T11>>)"]
-        T12["Target 12<br/>(n = <<T12>>)"]
-        T13["Target 13<br/>(n = <<T13>>)"]
-        T14["Target 14<br/>(n = <<T14>>)"]
-        T15["Target 15<br/>(n = <<T15>>)"]
-        T16["Target 16<br/>(n = <<T16>>)"]
-        T17["Target 17<br/>(n = <<T17>>)"]
-        T18["Target 18<br/>(n = <<T18>>)"]
-        T19["Target 19<br/>(n = <<T19>>)"]
-        T20["Target 20<br/>(n = <<T20>>)"]
-        T21["Target 21<br/>(n = <<T21>>)"]
-        T22["Target 22<br/>(n = <<T22>>)"]
-        T23["Target 23<br/>(n = <<T23>>)"]
-    end
-    Ch2L2 --> T3
-    Ch2L2 --> T4
-    Ch2L2 --> T5
-    Ch2L2 --> T6
-    Ch2L2 --> T7
-    Ch2L2 --> T8
-    Ch2L2 --> T9
-    Ch2L2 --> T10
-    Ch2L2 --> T11
-    Ch2L2 --> T12
-    Ch2L2 --> T13
-    Ch2L2 --> T14
-    Ch2L2 --> T15
-    Ch2L2 --> T16
-    Ch2L2 --> T17
-    Ch2L2 --> T18
-    Ch2L2 --> T19
-    Ch2L2 --> T20
-    Ch2L2 --> T21
-    Ch2L2 --> T22
-    Ch2L2 --> T23
+    %% subgraph L1_TARGET["GBF contexts & targets"]
+    %%     T3["Target 3<br/>(n = <<T3>>)"]
+    %%     T4["Target 4<br/>(n = <<T4>>)"]
+    %%     T5["Target 5<br/>(n = <<T5>>)"]
+    %%     T6["Target 6<br/>(n = <<T6>>)"]
+    %%     T7["Target 7<br/>(n = <<T7>>)"]
+    %%     T8["Target 8<br/>(n = <<T8>>)"]
+    %%     T9["Target 9<br/>(n = <<T9>>)"]
+    %%     T10["Target 10<br/>(n = <<T10>>)"]
+    %%     T11["Target 11<br/>(n = <<T11>>)"]
+    %%     T12["Target 12<br/>(n = <<T12>>)"]
+    %%     T13["Target 13<br/>(n = <<T13>>)"]
+    %%     T14["Target 14<br/>(n = <<T14>>)"]
+    %%     T15["Target 15<br/>(n = <<T15>>)"]
+    %%     T16["Target 16<br/>(n = <<T16>>)"]
+    %%     T17["Target 17<br/>(n = <<T17>>)"]
+    %%     T18["Target 18<br/>(n = <<T18>>)"]
+    %%     T19["Target 19<br/>(n = <<T19>>)"]
+    %%     T20["Target 20<br/>(n = <<T20>>)"]
+    %%     T21["Target 21<br/>(n = <<T21>>)"]
+    %%     T22["Target 22<br/>(n = <<T22>>)"]
+    %%     T23["Target 23<br/>(n = <<T23>>)"]
+    %% end
+    %% Ch2L2 --> T3
+    %% Ch2L2 --> T4
+    %% Ch2L2 --> T5
+    %% Ch2L2 --> T6
+    %% Ch2L2 --> T7
+    %% Ch2L2 --> T8
+    %% Ch2L2 --> T9
+    %% Ch2L2 --> T10
+    %% Ch2L2 --> T11
+    %% Ch2L2 --> T12
+    %% Ch2L2 --> T13
+    %% Ch2L2 --> T14
+    %% Ch2L2 --> T15
+    %% Ch2L2 --> T16
+    %% Ch2L2 --> T17
+    %% Ch2L2 --> T18
+    %% Ch2L2 --> T19
+    %% Ch2L2 --> T20
+    %% Ch2L2 --> T21
+    %% Ch2L2 --> T22
+    %% Ch2L2 --> T23
 
-    subgraph L1_REL["Spatial Planning Related"]
-        REL["Spatial Planning Related<br/>(n = <<REL>>)"]
-    end
-    Ch2L2 --> REL
+    %% subgraph L1_REL["Spatial Planning Related"]
+    %%     REL["Spatial Planning Related<br/>(n = <<REL>>)"]
+    %% end
+    %% Ch2L2 --> REL
 
-    subgraph L1_NexusSets["Nexus"]
-        direction TB
-        Nexus_Water["Water<br/>(n = <<Nexus_Water>>)"]
-        Nexus_Food["Food<br/>(n = <<Nexus_Food>>)"]
-        Nexus_Health["Health<br/>(n = <<Nexus_Health>>)"]
-        Nexus_Climate["Climate<br/>(n = <<Nexus_Climate>>)"]
-    end
-    Ch2L2 --> Nexus_Water
-    Ch2L2 --> Nexus_Food
-    Ch2L2 --> Nexus_Health
-    Ch2L2 --> Nexus_Climate
+    %% subgraph L1_NexusSets["Nexus"]
+    %%     direction TB
+    %%     Nexus_Water["Water<br/>(n = <<Nexus_Water>>)"]
+    %%     Nexus_Food["Food<br/>(n = <<Nexus_Food>>)"]
+    %%     Nexus_Health["Health<br/>(n = <<Nexus_Health>>)"]
+    %%     Nexus_Climate["Climate<br/>(n = <<Nexus_Climate>>)"]
+    %% end
+    %% Ch2L2 --> Nexus_Water
+    %% Ch2L2 --> Nexus_Food
+    %% Ch2L2 --> Nexus_Health
+    %% Ch2L2 --> Nexus_Climate
 
-    L1_GBF --> Ch2L4["<u><span style='color:#1a0dab;'>chapter_2_sdg.yaml<br/>Level 4 SDG filters</span></u>"]
-    L1_NexusSets --> Ch2L4
-    L1_REL --> Ch2L4
-    click Ch2L4 "../search_terms/chapter_2_sdg.yaml" "Open chapter_2_sdg.yaml"
-    subgraph SDGSets["SDG goal filters"]
-        direction TB
-        SDG1["SDG 1"]
-        SDG2["SDG 2"]
-        SDG3["SDG 3"]
-        SDG4["SDG 4"]
-        SDG5["SDG 5"]
-        SDG6["SDG 6"]
-        SDG7["SDG 7"]
-        SDG8["SDG 8"]
-        SDG9["SDG 9"]
-        SDG10["SDG 10"]
-        SDG11["SDG 11"]
-        SDG12["SDG 12"]
-        SDG13["SDG 13"]
-        SDG14["SDG 14"]
-        SDG15["SDG 15"]
-        SDG16["SDG 16"]
-        SDG17["SDG 17"]
-    end
-    Ch2L4 --> SDG1
-    Ch2L4 --> SDG2
-    Ch2L4 --> SDG3
-    Ch2L4 --> SDG4
-    Ch2L4 --> SDG5
-    Ch2L4 --> SDG6
-    Ch2L4 --> SDG7
-    Ch2L4 --> SDG8
-    Ch2L4 --> SDG9
-    Ch2L4 --> SDG10
-    Ch2L4 --> SDG11
-    Ch2L4 --> SDG12
-    Ch2L4 --> SDG13
-    Ch2L4 --> SDG14
-    Ch2L4 --> SDG15
-    Ch2L4 --> SDG16
-    Ch2L4 --> SDG17
+    %% L1_GBF --> Ch2L4["<u><span style='color:#1a0dab;'>chapter_2_sdg.yaml<br/>Level 4 SDG filters</span></u>"]
+    %% L1_NexusSets --> Ch2L4
+    %% L1_REL --> Ch2L4
+    %% click Ch2L4 "../search_terms/chapter_2_sdg.yaml" "Open chapter_2_sdg.yaml"
+    %% subgraph SDGSets["SDG goal filters"]
+    %%     direction TB
+    %%     SDG1["SDG 1"]
+    %%     SDG2["SDG 2"]
+    %%     SDG3["SDG 3"]
+    %%     SDG4["SDG 4"]
+    %%     SDG5["SDG 5"]
+    %%     SDG6["SDG 6"]
+    %%     SDG7["SDG 7"]
+    %%     SDG8["SDG 8"]
+    %%     SDG9["SDG 9"]
+    %%     SDG10["SDG 10"]
+    %%     SDG11["SDG 11"]
+    %%     SDG12["SDG 12"]
+    %%     SDG13["SDG 13"]
+    %%     SDG14["SDG 14"]
+    %%     SDG15["SDG 15"]
+    %%     SDG16["SDG 16"]
+    %%     SDG17["SDG 17"]
+    %% end
+    %% Ch2L4 --> SDG1
+    %% Ch2L4 --> SDG2
+    %% Ch2L4 --> SDG3
+    %% Ch2L4 --> SDG4
+    %% Ch2L4 --> SDG5
+    %% Ch2L4 --> SDG6
+    %% Ch2L4 --> SDG7
+    %% Ch2L4 --> SDG8
+    %% Ch2L4 --> SDG9
+    %% Ch2L4 --> SDG10
+    %% Ch2L4 --> SDG11
+    %% Ch2L4 --> SDG12
+    %% Ch2L4 --> SDG13
+    %% Ch2L4 --> SDG14
+    %% Ch2L4 --> SDG15
+    %% Ch2L4 --> SDG16
+    %% Ch2L4 --> SDG17

@@ -733,7 +733,8 @@ if (!file.exists(fn)) {
 }
 ```
 
-#### Counts per Language
+#### TODO Counts per Language
+THIS NEEDS TO BE DEBUGGED - NOT WORKING ANYMORE!!!
 
 ```{r}
 #| label: get_st_languages
@@ -986,7 +987,7 @@ if (!file.exists(fn)) {
 
 fn <- file.path(params$chapter_2, "st_hits.rds")
 if (!file.exists(fn)) {
-  get_count_L2(
+  get_count_L1(
     sets = params$search_terms$chapter_2,
     types_filter = params$types_filter,
     publication_year_from = params$publication_date$from,
@@ -1465,89 +1466,33 @@ render_mermaid(
 
 ch2_hits <- readRDS(file.path(params$chapter_2, "st_hits.rds"))
 
-ch2_counts <- lapply(
-  ch2_hits,
-  function(df) {
-    setNames(df$count, rownames(df))
-  }
-)
+# ch2_counts <- lapply(
+#   ch2_hits,
+#   function(df) {
+#     setNames(df$count, rownames(df))
+#   }
+# )
 
-do.call(
-  rbind,
-  lapply(names(ch2_hits), function(sect_nm) {
-    df <- ch2_hits[[sect_nm]]
-    df$section <- sect_nm
-    df$set <- rownames(df)
-    rownames(df) <- NULL
-    df[,
-      c("section", "set", setdiff(names(df), c("section", "set"))),
-      drop = FALSE
-    ]
-  })
-) |>
-  dplyr::mutate(
-    count = format_count(count)
-  ) |>
+ch2_counts <- setNames(ch2_hits$count, rownames(ch2_hits))
+
+ch2_hits |>
+  dplyr::mutate(count = format_count(count)) |>
   knitr::kable(
-    col.names = c("Section", "Set", "Count"),
-    align = c("c", "c", "r")
+    col.names = c("Count"),
+    align = "r"
   )
 ```
 
 ```{r}
 #| label: chapter_2_mermaid
 #| results: 'asis'
-
-ch2_gbf <- ch2_counts[["GBF"]]
-ch2_targets <- ch2_counts[["Targets"]]
-ch2_rel <- ch2_counts[["Related to spatial planning process"]]
-ch2_nexus <- ch2_counts[["Nexus"]]
-
-fmt_gbf <- function(name) format_count(ch2_gbf[[name]])
-fmt_target <- function(name) format_count(ch2_targets[[name]])
-fmt_rel <- function(name) format_count(ch2_rel[[name]])
-fmt_nexus <- function(name) format_count(ch2_nexus[[name]])
-
+#|
 render_mermaid(
   file.path("figures", "chapter2.mmd"),
   c(
-    GBF_Urban = fmt_gbf("GBF-1 - Urban"),
-    GBF_Rural = fmt_gbf("GBF-1 - Rural"),
-    GBF_Fresh = fmt_gbf("GBF-1 - Freshwater"),
-    GBF_Marine = fmt_gbf("GBF-1 - Marine"),
-    GBF_Restore = fmt_gbf("GBF - 2 (Ecosystem restoration)"),
-    T3 = fmt_target("Target 3 (Protected areas / conservation coverage)"),
-    T4 = fmt_target("Target 4 (Species extinction & genetic diversity)"),
-    T5 = fmt_target("Target 5 (Wild species trade & use)"),
-    T6 = fmt_target("Target 6 (Invasive alien species)"),
-    T7 = fmt_target("Target 7 (Pollution)"),
-    T8 = fmt_target("Target 8 (Climate change & resilience)"),
-    T9 = fmt_target("Target 9 (Wild species management & use)"),
-    T10 = fmt_target(
-      "Target 10 (Sustainability in agriculture, aquaculture, forestry & fisheries)"
-    ),
-    T11 = fmt_target(
-      "Target 11 (Nature\u2019s contributions to people / ecosystem services)"
-    ),
-    T12 = fmt_target("Target 12 (Green & blue spaces, urban planning)"),
-    T13 = fmt_target("Target 13 (Genetic resources & benefit sharing)"),
-    T14 = fmt_target("Target 14 (Biodiversity integration in decision-making)"),
-    T15 = fmt_target(
-      "Target 15 (Business & financial institutions disclosure & risk)"
-    ),
-    T16 = fmt_target("Target 16 (Sustainable consumption)"),
-    T17 = fmt_target("Target 17 (Biosafety)"),
-    T18 = fmt_target("Target 18 (Harmful incentives / subsidies)"),
-    T19 = fmt_target("Target 19 (Finance mobilisation)"),
-    T20 = fmt_target("Target 20 (Capacity building, technology & cooperation)"),
-    T21 = fmt_target("Target 21 (Data, knowledge & monitoring)"),
-    T22 = fmt_target("Target 22 (Participation & inclusion)"),
-    T23 = fmt_target("Target 23 (Gender equality)"),
-    REL = fmt_rel("Set Related"),
-    Nexus_Water = fmt_nexus("Water"),
-    Nexus_Food = fmt_nexus("Food"),
-    Nexus_Health = fmt_nexus("Health"),
-    Nexus_Climate = fmt_nexus("Climate")
+    Set_1 = format_count(ch2_counts[["Set 1"]]),
+    Set_2 = format_count(ch2_counts[["Set 2"]]),
+    Set_3 = format_count(ch2_counts[["Set 3"]])
   )
 )
 ```
