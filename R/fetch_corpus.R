@@ -4,6 +4,7 @@ fetch_corpus <- function(
   st_spcc = st$spcc,
   publication_date = params$publication_date,
   types_filter = params$types_filter,
+  sustainable_development_goals.idAND = NULL,
   workers = 2
 ) {
   queries <- lapply(
@@ -18,6 +19,7 @@ fetch_corpus <- function(
           ")"
         ),
         # type = params$types_filter,
+        sustainable_development_goals.id = sustainable_development_goals.idAND,
         from_publication_date = publication_date$from #,
         # to_publication_date = publication_date$to
       )
