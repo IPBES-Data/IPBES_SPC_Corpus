@@ -5,13 +5,19 @@ flowchart LR
 
     subgraph Chapter2Sets["GBF contexts & targets"]
         direction TB
-        Set_1["GSet 1n<br/>(n = <<Set_1>>)"]
-        Set_2["Set 2<br/>(n = <<Set_2>>)"]
-        Set_3["Set 3<br/>(n = <<Set_3>>)"]
+        Set_11["Set 1.1<br/>(n = <<Set_11>>)"]
+        Set_12["Set 1.2<br/>(n = <<Set_12>>)"]
+        Set_13["Set 1.3<br/>(n = <<Set_13>>)"]
+        Set_21["Set 2.1<br/>(n = <<Set_21>>)"]
+        Set_22["Set 2.2<br/>(n = <<Set_22>>)"]
+        %% Set_3["Set 3<br/>(n = <<Set_3>>)"]
     end
-    Ch2L2 --> Set_1
-    Ch2L2 --> Set_2
-    Ch2L2 --> Set_3
+    Ch2L2 --> Set_11
+    Ch2L2 --> Set_12
+    Ch2L2 --> Set_13
+    Ch2L2 --> Set_21
+    Ch2L2 --> Set_22
+    %% Ch2L2 --> Set_3
 
     %% subgraph L1_TARGET["GBF contexts & targets"]
     %%     T3["Target 3<br/>(n = <<T3>>)"]

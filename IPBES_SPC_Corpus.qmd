@@ -982,6 +982,8 @@ if (!file.exists(fn)) {
 
 ## Chapter 2
 
+Only works with identified at least one SDG are returned.
+
 ```{r}
 #| label: get_st_hits_chapter_2_L2
 
@@ -992,7 +994,8 @@ if (!file.exists(fn)) {
     types_filter = params$types_filter,
     publication_year_from = params$publication_date$from,
     publication_year_to = params$publication_date$to,
-    st_AND = st$spcc
+    st_AND = st$spcc,
+    sustainable_development_goals.idAND = "1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17"
   ) |>
     saveRDS(file = fn)
 }
@@ -1461,6 +1464,8 @@ render_mermaid(
 
 ### Chapter 2
 
+In addition to the search terms, only works which have at least one identified SDG are returned.
+
 ```{r}
 #| label: chapter_2_st_hits
 
@@ -1490,9 +1495,11 @@ ch2_hits |>
 render_mermaid(
   file.path("figures", "chapter2.mmd"),
   c(
-    Set_1 = format_count(ch2_counts[["Set 1"]]),
-    Set_2 = format_count(ch2_counts[["Set 2"]]),
-    Set_3 = format_count(ch2_counts[["Set 3"]])
+    Set_11 = format_count(ch2_counts[["Set 1.1"]]),
+    Set_12 = format_count(ch2_counts[["Set 1.2"]]),
+    Set_13 = format_count(ch2_counts[["Set 1.3"]]),
+    Set_21 = format_count(ch2_counts[["Set 2.1"]]),
+    Set_22 = format_count(ch2_counts[["Set 2.2"]])
   )
 )
 ```

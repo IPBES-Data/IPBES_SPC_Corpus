@@ -3,7 +3,8 @@ get_count_L1 <- function(
   types_filter,
   publication_year_from,
   publication_year_to,
-  st_AND
+  st_AND,
+  sustainable_development_goals.idAND = NULL
 ) {
   queries <- lapply(
     sets,
@@ -25,7 +26,8 @@ get_count_L1 <- function(
           ),
           type = types_filter,
           from_publication_date = publication_year_from,
-          to_publication_date = publication_year_to
+          to_publication_date = publication_year_to,
+          sustainable_development_goals.id = sustainable_development_goals.idAND
         ),
         silent = FALSE
       )
