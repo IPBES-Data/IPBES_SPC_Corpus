@@ -3,12 +3,8 @@
 # v2
 
 "Set 1":
-- '("spatial plan" OR "land use plan" OR zoning OR "regional plan" OR "municipal plan" OR "landscape plan" OR "design plan" OR "territorial plan" OR "development plan" OR "marine spatial plan" OR "urban plan" OR "conservation plan")'
+- '(((spatial OR "land use" OR regional OR municipal OR landscape OR design OR territorial OR development OR marine OR urban OR conservation) AND (plan)) OR zoning) AND'
+- '(GIS OR "multi-criteria" OR scenario OR modelling OR participatory OR synergies OR "trade-offs" OR optimization OR "remote sensing" OR "spatial prioritization" OR monitoring OR indicators OR "community-based" OR ((impact OR environmental OR risk) AND assessment) OR ((spatial OR "cost-benefit") AND analysis))'
 
 "Set 2":
 - '(biodiversity OR ecosystem OR "green infrastructure" OR "blue infrastructure" OR nature OR seascape OR agriculture OR forest OR coastal OR urban OR marine OR "protected area" OR "socio-ecological systems" OR culture OR stewardship OR "traditional ecological knowledge" OR "indigenous knowledge" OR kinship OR reciprocity OR connectivity OR fragmentation OR biocultural)'
-
-"Set 3":
-- '(GIS OR "multi-criteria" OR "impact assessment" OR "strategic environmental assessment" OR scenario OR modelling OR "spatial analysis" OR participatory OR "risk assessment" OR synergies OR "trade-offs" OR optimization OR "remote sensing" OR "cost-benefit analysis" OR "spatial priorization" OR monitoring OR indicators OR "community-based")'
-
-
