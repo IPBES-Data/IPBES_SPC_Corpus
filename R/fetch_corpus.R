@@ -5,7 +5,7 @@ fetch_corpus <- function(
   publication_date = params$publication_date,
   types_filter = params$types_filter,
   sustainable_development_goals.idAND = NULL,
-  workers = 2
+  workers = 8
 ) {
   queries <- lapply(
     search_terms,
@@ -40,11 +40,13 @@ fetch_corpus <- function(
   )
 
   message("####################")
-  message("Harmonizing raw corporas ...")
-
-  openalexPro::harmonize_parquet_schemata(
-    root_dir = file.path(project_dir, "parquet")
+  message(
+    "The Harmonizing is not done automatically. Please do it by hand if necessary!"
   )
+
+  # openalexPro::harmonize_parquet_schemata(
+  #   root_dir = file.path(project_dir, "parquet")
+  # )
 
   message("####################")
   message("Filtering raw corporas by types and end data...")
@@ -55,38 +57,6 @@ fetch_corpus <- function(
     recursive = TRUE,
     full.names = TRUE
   )
-
-  # for (f in files) {
-  #   # build destination path mirroring hive subdirs
-
-  #   f_out <- gsub(
-  #     pattern = "/parquet/",
-  #     replacement = "/corpus/",
-  #     x = f
-  #   )
-
-  #   dir.create(
-  #     dirname(f_out),
-  #     showWarnings = FALSE,
-  #     recursive = TRUE
-  #   )
-
-  #   # read lazily
-  #   pdt <- publication_date$to
-  #   arrow::open_dataset(
-  #     f,
-  #     format = "parquet"
-  #   ) |>
-  #     dplyr::filter(
-  #       type %in% types_filter,
-  #       publication_date <= pdt
-  #     ) |>
-  #     arrow::write_dataset(
-  #       path = dirname(f_out),
-  #       format = "parquet",
-  #       basename_template = paste0(basename(f_out), "-{i}.parquet")
-  #     )
-  # }
 
   # parallel filtering of raw corpora
   pdt <- publication_date$to
@@ -103,7 +73,7 @@ fetch_corpus <- function(
     future.apply::future_lapply(
       files,
       function(f) {
-        p(sprintf("Processing %s", basename(f)))
+        p(sprintf("Processing %s", dirname(f)))
 
         # build destination path mirroring hive subdirs
         f_out <- gsub(
@@ -124,7 +94,7 @@ fetch_corpus <- function(
         ) |>
           dplyr::filter(
             type %in% types_filter,
-            publication_date <= .env$pdt
+            publication_date <= pdt
           ) |>
           arrow::write_dataset(
             path = dirname(f_out),

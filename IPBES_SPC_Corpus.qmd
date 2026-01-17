@@ -118,20 +118,12 @@ params:
     # corpus_dir: !expr file.path(".", "spc_corpus", "data", "corpus")
 
     sample_size: 10000
-    mc.cores: 8
+    mc.cores: 10
 ---
 
 ```{r}
 #| label: setup
 #| include: false
-
-# paste(
-#     "(", paste0(readLines(file.path("tca_corpus", "input", "search terms", "nature.txt")), collapse = "\n"), ") \nAND \n(", paste0(readLines(file.path("tca_corpus", "input", "search terms", "tfc.txt")), collapse = "\n"), ")"
-# )
-
-try(
-  Sys.setenv(openalexR.apikey = keyring::key_get("API_openalex"))
-)
 
 knitr::opts_chunk$set(message = NA)
 
@@ -151,34 +143,6 @@ library(arrow)
 
 library(dplyr)
 library(tibble)
-
-# library(ggplot2)
-# library(patchwork)
-# library(igraph)
-# library(ggraph)
-# library(visNetwork)
-# library(DT)
-
-# library(tictoc)
-
-# library(knitr)
-
-# library(parquetize)
-# library(purrr)
-# library(base64enc)
-
-# library(diffviewer)
-
-# library(collapsibleTree)
-
-# library(htmlwidgets)
-
-# if (!require("IPBES.R")) {
-#     install.packages("IPBES.R", repos = c("https://ipbes-data.r-universe.dev", "https://cloud.r-project.org"))
-#     if (!require("IPBES.R")) {
-#         stop("Package `IPBES.R` is not available and could not be installed!")
-#     }
-# }
 
 lapply(
   list.files(
@@ -215,6 +179,9 @@ dir.create(params$chapter_6, recursive = TRUE, showWarnings = FALSE)
 
 
 # progressr::handlers(global = TRUE)
+
+Sys.setenv(openalexPro.apikey = keyring::key_get("API_openalex"))
+Sys.setenv(openalexPro.email = "Rainer@krugs.de")
 ```
 
 <p align="center">
@@ -1006,8 +973,21 @@ if (!file.exists(fn)) {
 ```{r}
 #| label: download_chapter_2
 
-corpus_dir <- file.path(params$chapter_2, "corpus.openalex_pro", "corpus")
-if (!dir.exists(corpus_dir)) {
+fns <- c(
+  "./spc_corpus/output/chapter_2/corpus.openalex_pro/corpus"
+)
+
+recalc <- !(all(
+  fns %in%
+    (file.path(params$chapter_2, "corpus.openalex_pro") |>
+      list.dirs(recursive = FALSE) |>
+      grepv(pattern = "corpus.openalex_pro/corpus"))
+))
+
+
+if (recalc) {
+  unlink(fns, recursive = TRUE)
+
   fetch_corpus(
     project_dir = file.path(params$chapter_2, "corpus.openalex_pro"),
     search_terms = params$search_terms$chapter_2,
@@ -1015,10 +995,162 @@ if (!dir.exists(corpus_dir)) {
     publication_date = params$publication_date,
     types_filter = params$types_filter,
     sustainable_development_goals.idAND = "1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17",
-    workers = 8
+    workers = 2 # params$mc.cores
+  )
+
+  ## Prepare Set 1 corpus
+
+  dst <- file.path(params$chapter_2, "corpus.openalex_pro", "corpus_Set_1")
+  dir.create(dst, recursive = TRUE, showWarnings = FALSE)
+
+  for (f in c(
+    "page=Set%201.1",
+    "page=Set%201.2",
+    "page=Set%201.3",
+    "page=Set%201.4"
+  )) {
+    src <- file.path(
+      params$chapter_2,
+      "corpus.openalex_pro",
+      "corpus",
+      f
+    )
+    file.copy(src, dst, recursive = TRUE)
+  }
+
+  ## Prepare Set 2 corpus
+
+  dst <- file.path(params$chapter_2, "corpus.openalex_pro", "corpus_Set_2")
+  dir.create(dst, recursive = TRUE, showWarnings = FALSE)
+
+  for (f in c("page=Set%202.1", "page=Set%202.2")) {
+    src <- file.path(
+      params$chapter_2,
+      "corpus.openalex_pro",
+      "corpus",
+      f
+    )
+    file.copy(src, dst, recursive = TRUE)
+  }
+}
+```
+
+```{r}
+#| label: dedupe_chapter_2_corpora
+
+fns <- c(
+  "./spc_corpus/output/chapter_2/corpus.openalex_pro/corpus_set_deduped"
+)
+recalc <- !(all(
+  fns %in%
+    (file.path(params$chapter_2, "corpus.openalex_pro") |>
+      list.dirs(recursive = FALSE) |>
+      grepv(pattern = "corpus.openalex_pro/corpus"))
+))
+
+
+if (recalc) {
+  fns <- c(
+    fns,
+    "spc_corpus/output/chapter_2/corpus.openalex_pro/corpus_Set_1_deduped",
+    "spc_corpus/output/chapter_2/corpus.openalex_pro/corpus_Set_2_deduped"
+  )
+
+  unlink(fns, recursive = TRUE)
+
+  ## dedupe Set 1 and Set 2
+
+  # dedupe_corpus(
+  #   project_dir = file.path(params$chapter_2, "corpus.openalex_pro"),
+  #   corpus_name = "corpus",
+  #   corpus_deduped_name = "corpus_deduped"
+  # )
+
+  dedupe_corpus(
+    project_dir = file.path(params$chapter_2, "corpus.openalex_pro"),
+    corpus_name = "corpus_Set_1",
+    corpus_deduped_name = "corpus_Set_1_deduped"
+  )
+  dedupe_corpus(
+    project_dir = file.path(params$chapter_2, "corpus.openalex_pro"),
+    corpus_name = "corpus_Set_2",
+    corpus_deduped_name = "corpus_Set_2_deduped"
+  )
+
+  ## Combine Sets into one corpus_set
+
+  dir.create(file.path(
+    params$chapter_2,
+    "corpus.openalex_pro",
+    "corpus_set"
+  ))
+
+  file.rename(
+    from = file.path(
+      params$chapter_2,
+      "corpus.openalex_pro",
+      "corpus_Set_1"
+    ),
+    to = file.path(
+      params$chapter_2,
+      "corpus.openalex_pro",
+      "corpus_set",
+      "set=Set%201"
+    )
+  )
+
+  file.rename(
+    from = file.path(
+      params$chapter_2,
+      "corpus.openalex_pro",
+      "corpus_Set_2"
+    ),
+    to = file.path(
+      params$chapter_2,
+      "corpus.openalex_pro",
+      "corpus_set",
+      "set=Set%202"
+    )
+  )
+
+  ## Combine deduped sets into one corpus_set_deduped
+
+  dir.create(file.path(
+    params$chapter_2,
+    "corpus.openalex_pro",
+    "corpus_set_deduped"
+  ))
+
+  file.rename(
+    from = file.path(
+      params$chapter_2,
+      "corpus.openalex_pro",
+      "corpus_Set_1_deduped"
+    ),
+    to = file.path(
+      params$chapter_2,
+      "corpus.openalex_pro",
+      "corpus_set_deduped",
+      "set=Set%201"
+    )
+  )
+
+  file.rename(
+    from = file.path(
+      params$chapter_2,
+      "corpus.openalex_pro",
+      "corpus_Set_2_deduped"
+    ),
+    to = file.path(
+      params$chapter_2,
+      "corpus.openalex_pro",
+      "corpus_set_deduped",
+      "set=Set%202"
+    )
   )
 }
 ```
+
 
 ## Chapter 3
 
@@ -1515,10 +1647,21 @@ render_mermaid(
     Set_11 = format_count(ch2_counts[["Set 1.1"]]),
     Set_12 = format_count(ch2_counts[["Set 1.2"]]),
     Set_13 = format_count(ch2_counts[["Set 1.3"]]),
+    Set_14 = format_count(ch2_counts[["Set 1.4"]]),
     Set_21 = format_count(ch2_counts[["Set 2.1"]]),
     Set_22 = format_count(ch2_counts[["Set 2.2"]])
   )
 )
+```
+
+#### Deduplicated
+
+```{r}
+
+file.path(params$chapter_2, "corpus.openalex_pro", "corpus_set_deduped") |>
+  arrow::open_dataset() |>
+  dplyr::summarize(n = n(), .by = c(set)) |>
+  dplyr::collect()
 ```
 
 ### Chapter 3

@@ -4,13 +4,17 @@
 
 "Set 1.1":
 - '(((spatial OR "land use" OR regional OR municipal OR landscape OR design OR territorial OR development OR marine OR urban OR conservation) AND (plan)) OR zoning) AND'
-- '(GIS OR "multi-criteria" OR scenario OR modelling OR participatory OR synergies OR "trade-offs" OR "remote sensing" OR "spatial prioritization")'
+- '(GIS OR scenario OR modelling OR participatory OR synergies OR "trade-offs" OR "remote sensing" OR "spatial prioritization")'
 
 "Set 1.2":
 - '(((spatial OR "land use" OR regional OR municipal OR landscape OR design OR territorial OR development OR marine OR urban OR conservation) AND (plan)) OR zoning) AND'
-- '(optimization OR monitoring OR indicators OR "community-based")'
+- '("multi-criteria")'
 
 "Set 1.3":
+- '(((spatial OR "land use" OR regional OR municipal OR landscape OR design OR territorial OR development OR marine OR urban OR conservation) AND (plan)) OR zoning) AND'
+- '(optimization OR monitoring OR indicators OR "community-based")'
+
+"Set 1.4":
 - '(((spatial OR "land use" OR regional OR municipal OR landscape OR design OR territorial OR development OR marine OR urban OR conservation) AND (plan)) OR zoning) AND'
 - '(((impact OR environmental OR risk) AND assessment) OR ((spatial OR "cost-benefit") AND analysis))'
 
