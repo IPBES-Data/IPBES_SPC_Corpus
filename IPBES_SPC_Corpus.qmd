@@ -1152,13 +1152,14 @@ if (recalc) {
 ```
 
 ```{r}
-#| label: Determine final corpus
+#| label: Extract final corpus
 
 dn <- file.path(
   params$chapter_2,
   "corpus.openalex_pro",
   "corpus_final"
 )
+
 if (!dir.exists(dn)) {
   arrow::open_dataset(
     file.path(
@@ -1177,15 +1178,11 @@ if (!dir.exists(dn)) {
       type,
       language,
       open_access,
-      primary_location
+      primary_location,
+      sustainable_development_goals
     ) |>
-    dplyr::mutate(
-      oa_status = open_access$oa_status,
-      open_access = NULL,
-      journal = primary_location$source$display_name,
-      primary_location = NULL
-    ) |>
-    # First, count occurrences of each id
+    dplyr::collect() |>
+    # First, count occurrences of each idid
     dplyr::add_count(
       id,
       name = "n_occurrences"
@@ -1199,16 +1196,20 @@ if (!dir.exists(dn)) {
       -n_occurrences
     ) |>
     # Keep only one record per id
-    dplyr::distinct(id, .keep_all = TRUE) |>
+    dplyr::distinct(
+      id,
+      .keep_all = TRUE
+    ) |>
     # Arrange by id to see duplicates together
     dplyr::arrange(id) |>
+    ## Extract oa_status, journal and SDGs with score
+    dplyr::mutate(
+      oa_status = open_access$oa_status,
+      journal = primary_location$source$display_name,
+    ) |>
     arrow::write_dataset(
       format = "parquet",
-      path = file.path(
-        params$chapter_2,
-        "corpus.openalex_pro",
-        "corpus_final"
-      ),
+      path = dn,
       partitioning = "publication_year"
     )
 }
