@@ -1231,16 +1231,24 @@ if (!file.exists(fn)) {
   ) |>
     arrow::open_dataset() |>
     dplyr::collect() |>
-    dplyr::rowwise() |>
-    dplyr::mutate(
-      sdg_1 = sustainable_development_goals$display_name[1],
-      sdg_1_score = sustainable_development_goals$score[1]
+    dplyr::select(-primary_location, -open_access) |>
+    tidyr::unnest(
+      sustainable_development_goals,
+      keep_empty = TRUE,
+      names_sep = "_"
     ) |>
+    dplyr::rename(
+      sdg_name = sustainable_development_goals_display_name,
+      sdg_score = sustainable_development_goals_score,
+      sdg_id = sustainable_development_goals_id
+    ) |>
+    dplyr::group_by(id) |>
+    dplyr::mutate(sdg_num = dplyr::row_number()) |>
     dplyr::ungroup() |>
-    dplyr::select(
-      -primary_location,
-      -sustainable_development_goals,
-      -open_access
+    tidyr::pivot_wider(
+      names_from = sdg_num,
+      values_from = c(sdg_name, sdg_score, sdg_id),
+      names_glue = "sdg_{sdg_num}_{.value}"
     )
 
   write.csv(dat, fn)
