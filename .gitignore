@@ -2,3 +2,7 @@
 **/corpus.openalex_pro/
 test/
 
+IPBES_SPC_Corpus.qmd
+
+spc_corpus/output/chapter_2/corpus_final.csv
+spc_corpus/output/chapter_2/corpus_final.xlsx

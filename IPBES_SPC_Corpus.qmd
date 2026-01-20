@@ -1215,6 +1215,40 @@ if (!dir.exists(dn)) {
 }
 ```
 
+```{r}
+#| label: export_ch2_csv
+
+fn <- file.path(
+  params$chapter_2,
+  "corpus_final.csv"
+)
+
+if (!file.exists(fn)) {
+  dat <- file.path(
+    params$chapter_2,
+    "corpus.openalex_pro",
+    "corpus_final"
+  ) |>
+    arrow::open_dataset() |>
+    dplyr::collect() |>
+    dplyr::rowwise() |>
+    dplyr::mutate(
+      sdg_1 = sustainable_development_goals$display_name[1],
+      sdg_1_score = sustainable_development_goals$score[1]
+    ) |>
+    dplyr::ungroup() |>
+    dplyr::select(
+      -primary_location,
+      -sustainable_development_goals,
+      -open_access
+    )
+
+  write.csv(dat, fn)
+  fn_xlsx <- gsub(".csv", ".xlsx", fn)
+  writexl::write_xlsx(dat, fn_xlsx)
+}
+```
+
 ## Chapter 3
 
 ```{r}
