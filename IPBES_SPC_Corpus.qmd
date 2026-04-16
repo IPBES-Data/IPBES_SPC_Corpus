@@ -34,7 +34,7 @@ citation:
   type: report
   container-title: 'IPBES Spatial Planning and Connectivity Assessment'
   doi: *doi
-version: 0.0.1 
+version: 0.5.0 
 
 format:
     html:
