@@ -121,34 +121,6 @@ params:
     mc.cores: 10
 ---
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19608284.svg)](https://doi.org/10.5281/zenodo.19608284)
-<!-- [![GitHub release](https://img.shields.io/github/release/IPBES-Data/IPBES_TCA_Corpus.svg)](https://github.com/IPBES-Data/IPBES_TCA_Corpus/releases/latest) -->
-[![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
-
-Part of the Data Management Report [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.TO_BE_ADDED.svg)](https://doi.org/10.5281/zenodo.TO_BE_ADDED)
-
-# Disclaimer
-This is a technical background document for the IPBES Methodological assessment of integrated biodiversity-inclusive spatial planning and ecological connectivity. This document provides technical details and implementation settings for the data management report of the [Transformative Change Assessment Corpus and its usage](https://doi.org/10.5281/zenodo.TO_BE_ADDED). The sole purpose of this document is to document the workflows used to produce statistics, figures and maps, to document the source of the data and to make the process transparent and reproducible.
-
-# Contributors
-
-## Assessment Experts
-
-- Vilaissante, Sebastian [![ORCID](./images/ORCID-iD_icon-16x16.png)](https://orcid.org/0000-0001-6296-4479)
-
-## Assessment TSU
-
-- Bishop, Gabriella [![ORCID](./images/ORCID-iD_icon-16x16.png)](https://orcid.org/0000-0002-0064-4653)
-
-## Data and Knowledge tsu
-
-- Niamir, Aidin [![ORCID](./images/ORCID-iD_icon-16x16.png)](https://orcid.org/0000-0003-4511-3407)
-- Gudde, Renske  [![ORCID](./images/ORCID-iD_icon-16x16.png)](https://orcid.org/0000-0003-4727-1011)
-
-# LLM Usage Disclosure
-
-Code and flowcharts in this project have been generated with the assistance of the Codex as well as Claude Code. All content and code is based on conceptuaisation by the authors and has been thoroughly reviewed and edited by humans afterwards.
-
 ```{r}
 #| label: setup
 #| include: false
@@ -210,6 +182,45 @@ dir.create(params$chapter_6, recursive = TRUE, showWarnings = FALSE)
 Sys.setenv(openalexPro.apikey = keyring::key_get("API_openalex"))
 Sys.setenv(openalexPro.email = "Rainer@krugs.de")
 ```
+
+<p align="center">
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19608284.svg)](https://doi.org/10.5281/zenodo.19608284)
+<!-- `r sprintf("[![Version](https://img.shields.io/badge/DOI-%s-blue.svg)](#)", URLencode(rmarkdown::metadata$doi, reserved = TRUE))` -->
+[![GitHub repo](https://img.shields.io/badge/GitHub-Repository-181717?logo=github)](https://github.com/IPBES-Data/IPBES_SPC_Corpus/)
+[![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/) 
+</p>
+
+<p align="center">
+[![GitHub](https://img.shields.io/github/release/IPBES-Data/IPBES_SPC_Corpus.svg)](https://github.com/IPBES-Data/IPBES_SPC_Corpus)
+`r sprintf("[![Version](https://img.shields.io/badge/Version-%s-blue.svg)](#)", URLencode(rmarkdown::metadata$version, reserved = TRUE))`
+`r sprintf("[![Build](https://img.shields.io/badge/Build-%s-greene.svg)](#)", build)`
+</p>
+
+Part of the Data Management Report [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.TO_BE_ADDED.svg)](https://doi.org/10.5281/zenodo.TO_BE_ADDED)
+
+# Disclaimer
+This is a technical background document for the IPBES Methodological assessment of integrated biodiversity-inclusive spatial planning and ecological connectivity. This document provides technical details and implementation settings for the data management report of the [Transformative Change Assessment Corpus and its usage](https://doi.org/10.5281/zenodo.TO_BE_ADDED). The sole purpose of this document is to document the workflows used to produce statistics, figures and maps, to document the source of the data and to make the process transparent and reproducible.
+
+# Contributors
+
+## Assessment Experts
+
+- Villasante, Sebastian [![ORCID](./images/ORCID-iD_icon-16x16.png)](https://orcid.org/0000-0001-6296-4479)
+
+## Assessment TSU
+
+- Bishop, Gabriella [![ORCID](./images/ORCID-iD_icon-16x16.png)](https://orcid.org/0000-0002-0064-4653)
+
+## Data and Knowledge tsu
+
+- Niamir, Aidin [![ORCID](./images/ORCID-iD_icon-16x16.png)](https://orcid.org/0000-0003-4511-3407)
+- Gudde, Renske  [![ORCID](./images/ORCID-iD_icon-16x16.png)](https://orcid.org/0000-0003-4727-1011)
+
+# LLM Usage Disclosure
+
+Code and flowcharts in this project have been generated with the assistance of the Codex as well as Claude Code. All content and code is based on conceptuaisation by the authors and has been thoroughly reviewed and edited by humans afterwards.
+
+
 
 
 # Introduction
@@ -1406,11 +1417,12 @@ if (!file.exists(fn)) {
 
 # Results
 
-## Assessment of Search Terms
+## SPC Corpus
+### Assessment of Search Terms
 
 The individual terms are assessed with the second term as AND, e,g. each individual term in spc is assessed with `AND nature`. In addition, 
 
-### SPC Term
+#### SPC Term
 
 ```{r}
 #| label: spc_term_assessment_table
@@ -1423,7 +1435,7 @@ readRDS(file.path(params$output, "searchterm_assessment_spcc.rds"))$spc |>
   knitr::kable(format = "html", escape = FALSE)
 ```
 
-### Nature Term
+#### Nature Term
 
 ```{r}
 #| label: nature_term_assessment_table
@@ -1436,7 +1448,7 @@ readRDS(file.path(params$output, "searchterm_assessment_spcc.rds"))$nature |>
   knitr::kable(format = "html", escape = FALSE)
 ```
 
-## Keypaper in Corpus
+### Keypaper in Corpus
 
 No filtering, neither by type nor by publication year is done. Therefore, the pure search terms are evaluated. 
 *If a paper is included in this table, doex not mean it is included in the final SPC Corpus due to filtering by dates and types!*
@@ -1477,7 +1489,7 @@ readRDS(file.path(params$keyworks, "kp_found_in.rds")) |>
   knitr::kable(format = "html", escape = FALSE)
 ```
 
-## SPC Corpus Measures and Numbers
+### SPC Corpus Measures and Numbers
 
 These data is gathered from OpenAlex directly, not downloaded any works. The data is used to assess the quality of the TCA Corpus.
 
@@ -1486,7 +1498,7 @@ The query contains:
 - the types selected (`r paste(params$types_filter, collapse = ", ")`)
 - the date range (from `r params$publication_date$from` to `r params$publication_date$to`)
 
-### Overall counts
+#### Overall counts
 
 ```{r}
 #| label: st_hits_table
@@ -1512,7 +1524,7 @@ render_mermaid(
 )
 ```
 
-### Publication Years
+#### Publication Years
 
 ```{r}
 #| label: st_hits_years
@@ -1565,7 +1577,7 @@ readRDS(file.path(params$corpus, "st_years.rds")) |>
   )
 ```
 
-### Language
+#### Language
 
 ```{r}
 #| label: st_languages_table
