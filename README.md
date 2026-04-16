@@ -5,9 +5,9 @@
 
 ## Metadata
 
-- **Assessment**: [https://www.ipbes.net/spatial-planning-assessment](Spatial planning and connectivity assessment)
+- **Assessment**: [Spatial planning and connectivity assessment](https://www.ipbes.net/spatial-planning-assessment)
 - **Github Repo**: [IPBES_SPC_Corpus](https://github.com/IPBES-Data/IPBES_SPC_Corpus/)
 
 ## Technical Reports
 	
-[https://ipbes-data.github.io/IPBES_SPC_Corpus/IPBES_SPC_Corpus.html](IPBES_SPC_Corpus.html)
+[IPBES_SPC_Corpus.html](https://ipbes-data.github.io/IPBES_SPC_Corpus/IPBES_SPC_Corpus.html)
