@@ -13,7 +13,7 @@ author:
         family: Bishop
         given: Gabriella    
     id: gb
-    orcid: ?????
+    orcid: 0000-0002-0064-4653
     roles: [author] 
   - name: 
         family: Villasante
@@ -28,7 +28,7 @@ abstract: >
 
 license: "CC BY"
 
-doi: &doi 10.5281/zenodo.XXXXX
+doi: &doi 10.5281/zenodo.19608284
 
 citation: 
   type: report
@@ -121,10 +121,37 @@ params:
     mc.cores: 10
 ---
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19608284.svg)](https://doi.org/10.5281/zenodo.19608284)
+<!-- [![GitHub release](https://img.shields.io/github/release/IPBES-Data/IPBES_TCA_Corpus.svg)](https://github.com/IPBES-Data/IPBES_TCA_Corpus/releases/latest) -->
+[![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
+
+Part of the Data Management Report [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.TO_BE_ADDED.svg)](https://doi.org/10.5281/zenodo.TO_BE_ADDED)
+
+# Disclaimer
+This is a technical background document for the IPBES Methodological assessment of integrated biodiversity-inclusive spatial planning and ecological connectivity. This document provides technical details and implementation settings for the data management report of the [Transformative Change Assessment Corpus and its usage](https://doi.org/10.5281/zenodo.TO_BE_ADDED). The sole purpose of this document is to document the workflows used to produce statistics, figures and maps, to document the source of the data and to make the process transparent and reproducible.
+
+# Contributors
+
+## Assessment Experts
+
+- Vilaissante, Sebastian [![ORCID](./images/ORCID-iD_icon-16x16.png)](https://orcid.org/0000-0001-6296-4479)
+
+## Assessment TSU
+
+- Bishop, Gabriella [![ORCID](./images/ORCID-iD_icon-16x16.png)](https://orcid.org/0000-0002-0064-4653)
+
+## Data and Knowledge tsu
+
+- Niamir, Aidin [![ORCID](./images/ORCID-iD_icon-16x16.png)](https://orcid.org/0000-0003-4511-3407)
+- Gudde, Renske  [![ORCID](./images/ORCID-iD_icon-16x16.png)](https://orcid.org/0000-0003-4727-1011)
+
+# LLM Usage Disclosure
+
+Code and flowcharts in this project have been generated with the assistance of the Codex as well as Claude Code. All content and code is based on conceptuaisation by the authors and has been thoroughly reviewed and edited by humans afterwards.
+
 ```{r}
 #| label: setup
 #| include: false
-
 knitr::opts_chunk$set(message = NA)
 
 build <- as.integer(readLines(file.path(".", "buildNo")))
@@ -183,42 +210,6 @@ dir.create(params$chapter_6, recursive = TRUE, showWarnings = FALSE)
 Sys.setenv(openalexPro.apikey = keyring::key_get("API_openalex"))
 Sys.setenv(openalexPro.email = "Rainer@krugs.de")
 ```
-
-<p align="center">
-`r sprintf("[![Version](https://img.shields.io/badge/DOI-%s-blue.svg)](#)", URLencode(rmarkdown::metadata$doi, reserved = TRUE))`
-[![GitHub](https://img.shields.io/github/release/IPBES-Data/IPBES_SPC_Corpus.svg)](https://github.com/IPBES-Data/IPBES_SPC_Corpus)
-[![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/) 
-</p>
-
-<p align="center">
-`r sprintf("[![Version](https://img.shields.io/badge/Version-%s-blue.svg)](#)", URLencode(rmarkdown::metadata$version, reserved = TRUE))`
-`r sprintf("[![Build](https://img.shields.io/badge/Build-%s-greene.svg)](#)", build)`
-</p>
-
-<!-- Part of the Data Management Report [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10251349.svg)](https://doi.org/10.5281/zenodo.10251349) -->
-
-# Disclaimer
-<!-- This is a technical background document for the IPBES Thematic assessment of the underlying causes of biodiversity loss, determinants of transformative change and options for achieving the 2050 vision for biodiversity. It provides technical details and implementation settings for the data management report of the [Transformative Change Assessment Corpus and its usage](https://doi.org/10.5281/zenodo.10251349). The sole purpose of this document is to document the workflows used to produce statistics, figures and maps, to document the source of the data and to make the process transparent and reproducible. -->
-
-# LLM Usage Disclosure
-
-Code and charts in this project have been generated with the assistance of the codex LLM tools in Positron. All content and code is based on conceptuaisation by the authors and has been thoroughly reviewed and edited by humans afterwards.
-
-# Contributors
-## Assessment Experts
-
-- xxx, yyy [![ORCID](./images/ORCID-iD_icon-16x16.png)](https://orcid.org/XXXXXXX)
-
-## Data and Knowledge tsu
-
-
-
-# Working Title
-IPBES_SPC_Corpus
-
-## Code repo
-
-[Github repository](https://github.com/IPBES-Data/IPBES_SPC_Corpus){target="_blank"}
 
 
 # Introduction
@@ -368,7 +359,6 @@ OpenAlex contains more then 270 million works of different types. The following 
 
 ```{r}
 #| label: openalex_work_types
-
 params$types |>
   knitr::kable(
     caption = "OpenAlex Work Types and Inclusion in the SPC Corpus",
@@ -398,7 +388,6 @@ This assessment is done on the whole of the OpenAlex corpus and only filtered fo
 
 ```{r}
 #| label: searchterm_assessment_spc
-
 fn <- file.path(params$output_dir, "searchterm_assessment_spcc.rds")
 
 if (!file.exists(fn)) {
@@ -437,7 +426,6 @@ The other columns are as returned by the OpenAlex API.
 ```{r}
 #| label: get_key_works_prep
 #|
-
 dois <- params$key_papers$goldstandard$DOI[
   params$key_papers$goldstandard$DOI != ""
 ]
@@ -449,7 +437,6 @@ ids <- params$key_papers$goldstandard$openalex_id[
 ```{r}
 #| label: get_key_works_openalex
 #|
-
 fn <- file.path(params$keyworks, "parquet", "found_in=openalex")
 if (!dir.exists(fn)) {
   ### KP in OpenAlex
@@ -491,7 +478,6 @@ if (!dir.exists(fn)) {
 ```{r}
 #| label: get_key_works_spc
 #|
-
 fn <- file.path(params$keyworks, "parquet", "found_in=spc")
 if (!dir.exists(fn)) {
   openalexPro::pro_query(
@@ -532,7 +518,6 @@ if (!dir.exists(fn)) {
 ```{r}
 #| label: get_key_works_nature
 #|
-
 fn <- file.path(params$keyworks, "parquet", "found_in=nature")
 if (!dir.exists(fn)) {
   ### KP in nature
@@ -572,7 +557,6 @@ if (!dir.exists(fn)) {
 ```{r}
 #| label: get_key_works_spcc
 #|
-
 fn <- file.path(params$keyworks, "parquet", "found_in=spcc")
 if (!dir.exists(fn)) {
   ### KP in spcc
@@ -620,7 +604,6 @@ The in the previous step retrieved works are analysed here to get a table which 
 
 ```{r}
 #| label: kp_found_in
-
 fn <- file.path(params$keyworks, "kp_found_in.rds")
 if (!file.exists(fn)) {
   arrow::open_dataset(file.path(params$keyworks, "parquet")) |>
@@ -643,7 +626,6 @@ if (!file.exists(fn)) {
     dplyr::collect() |>
     saveRDS(fn)
 }
-
 ```
 
 
@@ -663,7 +645,6 @@ The following counts are retrieved:
 ```{r}
 #| label: get_st_hits
 #|
-
 fn <- file.path(params$corpus, "st_hits.rds")
 if (!file.exists(fn)) {
   queries <- lapply(
@@ -706,7 +687,6 @@ THIS NEEDS TO BE DEBUGGED - NOT WORKING ANYMORE!!!
 ```{r}
 #| label: get_st_languages
 #|
-
 fn <- file.path(params$corpus, "st_languages.rds")
 if (!file.exists(fn)) {
   queries <- lapply(
@@ -763,7 +743,6 @@ if (!file.exists(fn)) {
 ```{r}
 #| label: get_st_years
 #| #|
-
 fn <- file.path(params$corpus, "st_years.rds")
 if (!file.exists(fn)) {
   queries <- lapply(
@@ -822,7 +801,6 @@ if (!file.exists(fn)) {
 
 ```{r}
 #| label: get_st_hits_chapter_1
-
 # params$search_terms$chapter_1
 
 fn <- file.path(params$chapter_1, "st_hits.rds")
@@ -843,7 +821,6 @@ Due to length limitations of the API call, the initial download is done without 
 
 ```{r}
 #| label: download_chapter_1
-
 corpus_dir <- file.path(params$chapter_1, "corpus.openalex_pro", "corpus")
 if (!dir.exists(corpus_dir)) {
   fetch_corpus(
@@ -860,7 +837,6 @@ if (!dir.exists(corpus_dir)) {
 
 ```{r}
 #| label: export_to_csljson_chapter_1
-
 fn <- file.path(
   params$chapter_1,
   "corpus.openalex_pro",
@@ -909,7 +885,6 @@ if (!file.exists(fn)) {
 
 ```{r}
 #| label: export csv_excel_chapter_1
-
 fn <- file.path(
   params$chapter_1,
   "corpus.openalex_pro",
@@ -953,7 +928,6 @@ Only works with identified at least one SDG are returned.
 
 ```{r}
 #| label: get_st_hits_chapter_2_L2
-
 fn <- file.path(params$chapter_2, "st_hits.rds")
 if (!file.exists(fn)) {
   get_count_L1(
@@ -966,13 +940,11 @@ if (!file.exists(fn)) {
   ) |>
     saveRDS(file = fn)
 }
-
 ```
 
 
 ```{r}
 #| label: download_chapter_2
-
 fns <- c(
   "./spc_corpus/output/chapter_2/corpus.openalex_pro/corpus"
 )
@@ -1037,7 +1009,6 @@ if (recalc) {
 
 ```{r}
 #| label: dedupe_chapter_2_corpora
-
 fns <- c(
   "./spc_corpus/output/chapter_2/corpus.openalex_pro/corpus_set_deduped"
 )
@@ -1153,7 +1124,6 @@ if (recalc) {
 
 ```{r}
 #| label: Extract final corpus
-
 dn <- file.path(
   params$chapter_2,
   "corpus.openalex_pro",
@@ -1217,7 +1187,6 @@ if (!dir.exists(dn)) {
 
 ```{r}
 #| label: export_ch2_csv
-
 fn <- file.path(
   params$chapter_2,
   "corpus_final.csv"
@@ -1261,7 +1230,6 @@ if (!file.exists(fn)) {
 
 ```{r}
 #| label: get_st_hits_chapter_3
-
 fn <- file.path(params$chapter_3, "st_hits.rds")
 if (!file.exists(fn)) {
   get_count_L1(
@@ -1279,7 +1247,6 @@ Due to length limitations of the API call, the initial download is done without 
 
 ```{r}
 #| label: download_chapter_3
-
 corpus_dir <- file.path(params$chapter_3, "corpus.openalex_pro", "corpus")
 if (!dir.exists(corpus_dir)) {
   fetch_corpus(
@@ -1296,7 +1263,6 @@ if (!dir.exists(corpus_dir)) {
 ```{r}
 #| label: export_to_csljson
 #| eval: false
-
 fn <- file.path(
   params$chapter_3,
   "corpus.openalex_pro",
@@ -1345,7 +1311,6 @@ if (!file.exists(fn)) {
 
 ```{r}
 #| label: export csv_excel
-
 fn <- file.path(
   params$chapter_3,
   "corpus.openalex_pro",
@@ -1388,7 +1353,6 @@ if (!file.exists(fn)) {
 
 ```{r}
 #| label: get_st_hits_chapter_4
-
 fn <- file.path(params$chapter_4, "st_hits.rds")
 if (!file.exists(fn)) {
   get_count_L1(
@@ -1407,7 +1371,6 @@ if (!file.exists(fn)) {
 
 ```{r}
 #| label: get_st_hits_chapter_5_L2
-
 fn <- file.path(params$chapter_5, "st_hits.rds")
 if (!file.exists(fn)) {
   get_count_L2(
@@ -1427,7 +1390,6 @@ if (!file.exists(fn)) {
 
 ```{r}
 #| label: get_st_hits_chapter_6
-
 fn <- file.path(params$chapter_6, "st_hits.rds")
 if (!file.exists(fn)) {
   get_count_L1(
@@ -1452,7 +1414,6 @@ The individual terms are assessed with the second term as AND, e,g. each individ
 
 ```{r}
 #| label: spc_term_assessment_table
-
 readRDS(file.path(params$output, "searchterm_assessment_spcc.rds"))$spc |>
   dplyr::arrange(desc(count)) |>
   dplyr::mutate(
@@ -1466,7 +1427,6 @@ readRDS(file.path(params$output, "searchterm_assessment_spcc.rds"))$spc |>
 
 ```{r}
 #| label: nature_term_assessment_table
-
 readRDS(file.path(params$output, "searchterm_assessment_spcc.rds"))$nature |>
   dplyr::arrange(desc(count)) |>
   dplyr::mutate(
@@ -1483,7 +1443,6 @@ No filtering, neither by type nor by publication year is done. Therefore, the pu
 
 ```{r}
 #| label: kp_in_corpus_table
-
 readRDS(file.path(params$keyworks, "kp_found_in.rds")) |>
   dplyr::mutate(
     id_display = sub("^.*/(W[0-9]+)$", "\\1", id),
@@ -1531,7 +1490,6 @@ The query contains:
 
 ```{r}
 #| label: st_hits_table
-
 readRDS(file.path(params$corpus, "st_hits.rds")) |>
   dplyr::mutate(
     count = format(count, big.mark = ",")
@@ -1542,7 +1500,6 @@ readRDS(file.path(params$corpus, "st_hits.rds")) |>
 ```{r}
 #| label: overview_counts_mermaid
 #| results: 'asis'
-
 corpus_counts <- readRDS(file.path(params$corpus, "st_hits.rds"))
 
 render_mermaid(
@@ -1559,7 +1516,6 @@ render_mermaid(
 
 ```{r}
 #| label: st_hits_years
-
 readRDS(file.path(params$corpus, "st_years.rds")) |>
   dplyr::mutate(
     dplyr::across(
@@ -1574,7 +1530,6 @@ This graph only shows the relative nuymber of publications per year to identify 
 
 ```{r}
 #| label: st_years_plot
-
 readRDS(file.path(params$corpus, "st_years.rds")) |>
   tidyr::pivot_longer(
     cols = dplyr::starts_with("count_"),
@@ -1614,7 +1569,6 @@ readRDS(file.path(params$corpus, "st_years.rds")) |>
 
 ```{r}
 #| label: st_languages_table
-
 readRDS(file.path(params$corpus, "st_languages.rds")) |>
   dplyr::mutate(
     dplyr::across(
@@ -1629,7 +1583,6 @@ This graph only shows the relative number of publications per year to identify d
 
 ```{r}
 #| label: st_language_plot
-
 readRDS(file.path(params$corpus, "st_languages.rds")) |>
   # keep top 15 languages by total (before scaling)
   dplyr::mutate(
@@ -1684,7 +1637,6 @@ Here we show the sub-searches for the individual chapters. In the tables indicat
 
 ```{r}
 #| label: chapter_1_st_hits
-
 ch1_hits <- readRDS(file.path(params$chapter_1, "st_hits.rds"))
 
 ch1_counts <- setNames(ch1_hits$count, rownames(ch1_hits))
@@ -1700,7 +1652,6 @@ ch1_hits |>
 ```{r}
 #| label: chapter_1_mermaid
 #| results: 'asis'
-
 render_mermaid(
   file.path("figures", "chapter1.mmd"),
   c(
@@ -1722,7 +1673,6 @@ In addition to the search terms, only works which have at least one identified S
 
 ```{r}
 #| label: chapter_2_st_hits
-
 ch2_hits <- readRDS(file.path(params$chapter_2, "st_hits.rds"))
 
 # ch2_counts <- lapply(
@@ -1762,7 +1712,6 @@ render_mermaid(
 #### Deduplicated within each Set
 
 ```{r}
-
 file.path(params$chapter_2, "corpus.openalex_pro", "corpus_set_deduped") |>
   arrow::open_dataset() |>
   dplyr::summarize(n = n(), .by = c(set)) |>
@@ -1794,7 +1743,6 @@ nrow(cf) |>
 
 ```{r}
 #| label: chapter_3_st_hits
-
 ch3_hits <- readRDS(file.path(params$chapter_3, "st_hits.rds"))
 
 ch3_counts <- setNames(ch3_hits$count, rownames(ch3_hits))
@@ -1810,7 +1758,6 @@ ch3_hits |>
 ```{r}
 #| label: chapter_3_mermaid
 #| results: 'asis'
-
 render_mermaid(
   file.path("figures", "chapter3.mmd"),
   c(
@@ -1835,7 +1782,6 @@ render_mermaid(
 
 ```{r}
 #| label: chapter_4_st_hits
-
 ch4_hits <- readRDS(file.path(params$chapter_4, "st_hits.rds"))
 
 ch4_counts <- setNames(ch4_hits$count, rownames(ch4_hits))
@@ -1851,7 +1797,6 @@ ch4_hits |>
 ```{r}
 #| label: chapter_4_mermaid
 #| results: 'asis'
-
 render_mermaid(
   file.path("figures", "chapter4.mmd"),
   c(
@@ -1871,7 +1816,6 @@ render_mermaid(
 
 ```{r}
 #| label: chapter_5_st_hits
-
 ch5_hits <- readRDS(file.path(params$chapter_5, "st_hits.rds"))
 
 ch5_counts <- lapply(ch5_hits, function(df) {
@@ -1898,13 +1842,11 @@ do.call(
     col.names = c("Section", "Set", "Count"),
     align = c("c", "c", "r")
   )
-
 ```
 
 ```{r}
 #| label: chapter_5_mermaid
 #| results: 'asis'
-
 fmt_ch5 <- function(section, set) {
   format_count(ch5_counts[[section]][[set]])
 }
@@ -1941,7 +1883,6 @@ render_mermaid(
 
 ```{r}
 #| label: chapter_6_st_hits
-
 ch6_hits <- readRDS(file.path(params$chapter_6, "st_hits.rds"))
 
 ch6_counts <- setNames(ch6_hits$count, rownames(ch6_hits))
@@ -1957,7 +1898,6 @@ ch6_hits |>
 ```{r}
 #| label: chapter_6_mermaid
 #| results: 'asis'
-
 render_mermaid(
   file.path("figures", "chapter6.mmd"),
   c(
